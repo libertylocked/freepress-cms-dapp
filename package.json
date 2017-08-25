@@ -1,0 +1,22 @@
+{
+  "name": "blog-dapp",
+  "version": "0.1.0",
+  "description": "A proof-of-concept blogging dapp",
+  "scripts": {
+    "migrate": "truffle migrate",
+    "test": "truffle test",
+    "testrpc": "testrpc -a 10 -i 1503307538283 -p 8546"
+  },
+  "keywords": [],
+  "author": "libertylocked",
+  "license": "MIT",
+  "dependencies": {
+    "ethereumjs-util": "^5.1.2",
+    "truffle": "^3.4.9",
+    "web3": "^0.20.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "ethereumjs-testrpc": "^4.0.1"
+  }
+}
