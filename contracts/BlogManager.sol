@@ -6,6 +6,7 @@ contract BlogManager {
         uint id; // index of the post in the posts arr
         bytes32 bzzHash;
         uint timePublished;
+        uint timeUpdated;
     }
     
     struct Comment {
@@ -20,7 +21,7 @@ contract BlogManager {
     event LogWithdrawn(uint amount);
     event LogKilled();
     
-    address owner;
+    address public owner;
     mapping(bytes32 => Post) public postRegistry;
     bytes32[] public posts; // bzz hashes of the posts
     mapping(uint => Comment[]) public comments;
@@ -47,13 +48,30 @@ contract BlogManager {
             title: title,
             id: id,
             bzzHash: bzzHash,
-            timePublished: block.number
+            timePublished: block.number,
+            timeUpdated: block.number
         });
         // add to registry and posts arr
         postRegistry[bzzHash] = newPost;
         posts.length = posts.push(bzzHash);
         LogPostPublished(id);
         return (true, id);
+    }
+    
+    // update lets owner update an existing post
+    function update(uint id, bytes32 bzzHash, string title) returns (bool) {
+        require(posts[id] != 0);
+        Post storage oldPost = postRegistry[posts[id]];
+        postRegistry[bzzHash] = Post({ // add the updated post
+            title: title, // update post title
+            id: oldPost.id, // retain the post ID
+            bzzHash: bzzHash, // update post bzz hash
+            timePublished: oldPost.timePublished, // keep original publish time
+            timeUpdated: block.number // update time updated
+        });
+        // delete the old post in registry
+        delete postRegistry[bzzHash];
+        return true;
     }
     
     // unpublish removes a post from post registry
