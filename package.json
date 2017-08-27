@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A decentralized CMS for personal blogging",
   "scripts": {
-    "testrpc": "testrpc -a 10 -i 1503307538283 -p 8546",
+    "testrpc": "testrpc -i 1503307538283 -p 8546 --account=\"0xfd7cf931fc45db3cf92c9b5793266ea28516114d1389b3254f570127f7ae7aa6,1000000000000000000000\" --account=\"0xb9aaab47bb702fcc31f524e429c3b0fa5011049bf1f241d986db59df27e92a72,1000000000000000000000\" --account=\"0x5f45d01b367ec11735294aa8248bfa07a62d3cdfa6b28bddf6916724e73003f8,1000000000000000000000\"",
     "test": "jest --verbose --coverage",
     "build": "cross-env NODE_ENV=production webpack",
     "build-dev": "cross-env NODE_ENV=development webpack",
