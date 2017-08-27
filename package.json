@@ -48,7 +48,6 @@
     "moment": "^2.18.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "truffle": "^3.4.9",
     "truffle-contract": "^2.0.5",
     "web3": "^0.20.1"
   },
@@ -72,6 +71,7 @@
     "rimraf": "^2.6.1",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",
+    "truffle": "^3.4.9",
     "ts-jest": "^20.0.10",
     "ts-loader": "^2.3.4",
     "ts-node": "^3.3.0",
