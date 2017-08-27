@@ -18,6 +18,10 @@
     "typescript"
   ],
   "author": "libertylocked",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/libertylocked/blog-cms-dapp.git"
+  },
   "license": "MIT",
   "jest": {
     "collectCoverageFrom": [
