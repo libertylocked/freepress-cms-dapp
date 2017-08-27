@@ -13,6 +13,7 @@ const isProd = (): boolean => {
 const buildConfig: webpack.Configuration = {
   entry: {
     bundle: path.join(__dirname, "src/index.tsx"),
+    vendor_bundle: ["web3", "bluebird", "truffle-contract"],
   },
   // tslint:disable-next-line:no-object-literal-type-assertion
   module: {
@@ -79,6 +80,11 @@ const buildConfig: webpack.Configuration = {
   plugins: [
     // exclude locale files in moment
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // pack vendor chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor_bundle",
+      minChunks: Infinity,
+    }),
     // copy files in public to build
     new CopyWebpackPlugin([{
       context: "public",
@@ -122,7 +128,7 @@ if (isProd()) {
     }),
     // exclude source mapping for vendor libs
     new webpack.SourceMapDevToolPlugin({
-      exclude: /^vendor.*.\.js$/,
+      exclude: /^(vendor_).*\.js$/,
       filename: "[file].map",
     }),
   ]);

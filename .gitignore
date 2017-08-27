@@ -53,4 +53,5 @@ tmp/
 /build
 
 # vscode
-.vscode/.chrome
+.vscode
+!.vscode/launch.json
