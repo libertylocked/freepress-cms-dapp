@@ -4,11 +4,11 @@
   "description": "A decentralized CMS for personal blogging",
   "scripts": {
     "testrpc": "testrpc -a 10 -i 1503307538283 -p 8546",
-    "test-app": "jest --verbose --coverage",
+    "test": "jest --verbose --coverage",
     "build": "cross-env NODE_ENV=production webpack",
     "build-dev": "cross-env NODE_ENV=development webpack",
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
-    "clean-app": "rimraf ./build/app",
+    "clean": "rimraf ./build/app",
     "lint": "tslint -p tsconfig.json"
   },
   "keywords": [
