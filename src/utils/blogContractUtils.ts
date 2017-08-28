@@ -5,3 +5,7 @@ export const ParsePost = (postRaw: PostRaw): Post => ({
   timePublished: postRaw[3],
   timeUpdated: postRaw[4],
 } as Post);
+
+export const IsPostValid = (post: Post): boolean => (
+  post.bzzHash !== "0x0000000000000000000000000000000000000000000000000000000000000000"
+);

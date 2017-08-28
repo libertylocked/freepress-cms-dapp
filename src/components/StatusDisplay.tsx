@@ -19,7 +19,7 @@ const StatusDisplay: React.StatelessComponent<IProps> = (props) => {
       <p>Network ID: {props.network}</p>
       <p>Contract Address: {props.contractAddress}</p>
       <p>Blog Owner: {props.blogOwner}</p>
-      <p>Post Count: {props.postCount.toString()}</p>
+      <p>Total # of posts published: {props.postCount.toString()}</p>
     </div>
   );
 };

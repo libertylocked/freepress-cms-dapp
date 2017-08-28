@@ -5,7 +5,7 @@ interface IProps {
   web3: Web3;
   isOwner: boolean;
   contractInstance: BlogManager;
-  onSubmit: (txObject: any) => void;
+  onSubmitSuccess: (txObject: any) => void;
 }
 
 class AddPost extends React.Component<IProps, {}> {
@@ -50,7 +50,7 @@ class AddPost extends React.Component<IProps, {}> {
       this.bzzHashInput.value = "";
       this.postTitleInput.value = "";
       // invoke callback
-      this.props.onSubmit(txObj);
+      this.props.onSubmitSuccess(txObj);
     } catch (err) {
       alert(err);
     }
