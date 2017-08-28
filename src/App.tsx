@@ -7,6 +7,7 @@ const TruffleContract = require("Truffle-Contract");
 const BlogManagerJSON = require("../build/contracts/BlogManager.json");
 
 import AddPost from "./components/AddPost";
+import PostDirectory from "./components/PostDirectory";
 import StatusDisplay from "./components/StatusDisplay";
 
 const appStyles = require("./App.css");
@@ -59,7 +60,7 @@ class App extends React.Component<{}, IState> {
     return (
       <div className={appStyles.app}>
         <div className={appStyles.appHeader}>
-          <h2>Decentralized CMS DApp</h2>
+          <h2>Decentralized CMS for Blogging</h2>
         </div>
         <div>
           {this.state.clientState && this.state.contractState ?
@@ -85,6 +86,15 @@ class App extends React.Component<{}, IState> {
             />
             : <p>Loading</p>}
         </div>
+        <hr />
+        {this.state.contractState ?
+          <PostDirectory
+            fromID={new BigNumber(0)}
+            toID={this.state.contractState.postCount.minus(1)}
+            contractInstance={this.state.contractState.instance}
+          />
+          : null
+        }
       </div>
     );
   }
@@ -92,16 +102,23 @@ class App extends React.Component<{}, IState> {
   private updateContractState = async (web3: Web3) => {
     const BlogManagerContract = TruffleContract(BlogManagerJSON);
     BlogManagerContract.setProvider(web3.currentProvider);
-    const contractInstance = await BlogManagerContract.deployed() as BlogManager;
-    const postCount: BigNumber.BigNumber = await contractInstance.getPostCount();
-    const owner: string = await contractInstance.owner();
-    this.setState({
-      contractState: {
-        instance: contractInstance,
-        owner,
-        postCount,
-      },
-    });
+    try {
+      const contractInstance = await BlogManagerContract.deployed() as BlogManager;
+      const postCount: BigNumber.BigNumber = await contractInstance.getPostCount();
+      const owner: string = await contractInstance.owner();
+      this.setState({
+        contractState: {
+          instance: contractInstance,
+          owner,
+          postCount,
+        },
+      });
+    } catch (err) {
+      alert(err);
+      this.setState({
+        contractState: undefined,
+      });
+    }
   }
 }
 

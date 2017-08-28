@@ -3,7 +3,7 @@ interface BlogManager {
 
   owner: () => Promise<string>;
   postRegistry: (hash: string) => Promise<PostRaw>;
-  posts: (id: BigNumber.BigNumber | number) => Promise<BigNumber.BigNumber>;
+  posts: (id: BigNumber.BigNumber | number) => Promise<string>;
   comments: (id: BigNumber.BigNumber | number) => Promise<CommentRaw[]>;
   publish: (bzzHash: string, title: string) => Promise<any>;
   update: (postID: BigNumber.BigNumber, newBzzHash: string, title: string) => Promise<any>;
