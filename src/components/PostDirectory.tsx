@@ -7,6 +7,7 @@ interface IProps {
   contractInstance: BlogManager;
   fromID: BigNumber.BigNumber;
   toID: BigNumber.BigNumber;
+  isOwner: boolean;
   onDeleteSuccess: (txObj: any) => void;
 }
 
@@ -44,6 +45,7 @@ class PostDirectory extends React.Component<IProps, IState> {
             <PostDirectoryItem
               key={post.id.toString()}
               post={post}
+              isOwner={this.props.isOwner}
               onDeleteClick={(id) => { this.deletePost(id, this.props.onDeleteSuccess, this.props.contractInstance); }}
             />
             : null

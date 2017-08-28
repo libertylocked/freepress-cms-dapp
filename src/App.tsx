@@ -30,8 +30,6 @@ interface IContractState {
 }
 
 class App extends React.Component<{}, IState> {
-  private postDirectory: PostDirectory | null;
-
   public constructor() {
     super();
     this.state = {
@@ -87,13 +85,13 @@ class App extends React.Component<{}, IState> {
             : <p>Loading</p>}
         </div>
         <hr />
-        {this.state.contractState ?
+        {this.state.clientState && this.state.contractState ?
           <PostDirectory
-            ref={(r) => { this.postDirectory = r; }}
             fromID={new BigNumber(0)}
             toID={this.state.contractState.postCount.minus(1)}
             contractInstance={this.state.contractState.instance}
             onDeleteSuccess={() => this.updateContractState(this.state.web3)}
+            isOwner={this.state.clientState.coinbase === this.state.contractState.owner}
           />
           : null
         }
