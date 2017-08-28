@@ -6,7 +6,7 @@ Freepress CMS is a proof-of-concept decentralized CMS for personal blogging, pow
 
 > :warning: This is pre-production software with very minimal testing, and is certainly not audited. Use at your own risk.
 
-# Features
+# Planned Features
 - Write your blog posts in Markdown, then publish them to your personal blog smart contract!
 - Posts are uploaded to the Swarm network (`web3.bzz`)
 - Post registry is stored in a smart contract on Ethereum Blockchain
