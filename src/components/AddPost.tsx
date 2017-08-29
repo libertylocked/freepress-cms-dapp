@@ -4,7 +4,7 @@ import * as Web3 from "web3";
 interface IProps {
   web3: Web3;
   isOwner: boolean;
-  contractInstance: BlogManager;
+  contractInstance: BlogManager.BlogManager;
   onSubmitSuccess: (txObject: any) => void;
 }
 

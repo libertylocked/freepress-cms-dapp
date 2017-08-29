@@ -1,18 +1,17 @@
+import * as BigNumber from "bignumber.js";
 import * as React from "react";
-import { ParsePost, IsPostValid } from "../utils/blogContractUtils";
+import { IsPostValid, ParsePost } from "../utils/blogContractUtils";
 
 import PostDirectoryItem from "./PostDirectoryItem";
 
 interface IProps {
-  contractInstance: BlogManager;
-  fromID: BigNumber.BigNumber;
-  toID: BigNumber.BigNumber;
+  contractInstance: BlogManager.BlogManager;
   isOwner: boolean;
   onDeleteSuccess: (txObj: any) => void;
 }
 
 interface IState {
-  posts: Post[];
+  posts: BlogManager.Post[];
 }
 
 class PostDirectory extends React.Component<IProps, IState> {
@@ -25,15 +24,7 @@ class PostDirectory extends React.Component<IProps, IState> {
   }
 
   public async componentWillMount() {
-    const posts = await this.getPosts(this.props.fromID, this.props.toID, this.props.contractInstance);
-    this.setState({ posts });
-  }
-
-  public async componentWillReceiveProps(nextProps: IProps) {
-    if (this.props.fromID !== nextProps.fromID || this.props.toID !== nextProps.toID) {
-      const posts = await this.getPosts(nextProps.fromID, nextProps.toID, nextProps.contractInstance);
-      this.setState({ posts });
-    }
+    this.updatePostsState();
   }
 
   public render() {
@@ -54,7 +45,15 @@ class PostDirectory extends React.Component<IProps, IState> {
     );
   }
 
-  private getPosts = async (fromID: BigNumber.BigNumber, toID: BigNumber.BigNumber, instance: BlogManager) => {
+  public updatePostsState = async () => {
+    const postCount = await this.props.contractInstance.getPostCount();
+    const posts = await this.getPosts(new BigNumber(0), postCount.minus(1), this.props.contractInstance);
+    this.setState({ posts });
+  }
+
+  private getPosts = async (fromID: BigNumber.BigNumber,
+                            toID: BigNumber.BigNumber,
+                            instance: BlogManager.BlogManager): Promise<BlogManager.Post[]> => {
     let postID = fromID;
     const postIDs = [];
     while (postID.lessThanOrEqualTo(toID)) {
@@ -68,11 +67,13 @@ class PostDirectory extends React.Component<IProps, IState> {
   }
 
   private deletePost = async (postID: BigNumber.BigNumber,
-    successCallback: (txObj: any) => void, instance: BlogManager) => {
+                              successCallback: (txObj: any) => void,
+                              instance: BlogManager.BlogManager) => {
     try {
       const txObj: any = await instance.unpublish(postID);
       console.log(txObj);
       alert("Your post has been deleted. ID is " + postID);
+      this.updatePostsState();
       // invoke callback
       successCallback(txObj);
     } catch (err) {

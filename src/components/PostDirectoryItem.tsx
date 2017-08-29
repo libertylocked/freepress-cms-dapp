@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface IProps {
-  post: Post;
+  post: BlogManager.Post;
   isOwner: boolean;
   onDeleteClick: (id: BigNumber.BigNumber) => void;
 }
