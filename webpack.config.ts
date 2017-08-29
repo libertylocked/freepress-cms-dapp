@@ -13,9 +13,8 @@ const isProd = (): boolean => {
 const buildConfig: webpack.Configuration = {
   entry: {
     bundle: path.join(__dirname, "src/index.tsx"),
-    vendor_bundle: ["web3", "bluebird", "truffle-contract"],
+    vendor_bundle: ["web3", "truffle-contract", "bluebird", "react", "react-dom"],
   },
-  // tslint:disable-next-line:no-object-literal-type-assertion
   module: {
     rules: [
       // compile ts
