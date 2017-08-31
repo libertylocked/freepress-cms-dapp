@@ -8,24 +8,24 @@ contract BlogManager {
         uint timePublished;
         uint timeUpdated;
     }
-    
+
     struct Comment {
         address commenter;
         uint amount;
         string text;
     }
-    
+
     event LogPostPublished(uint id);
     event LogPostUnpublished(uint id);
-    event LogDonationReceived(uint id);
+    event LogCommented(uint id, uint commentIndex);
     event LogWithdrawn(uint amount);
     event LogKilled();
-    
+
     address public owner;
     mapping(bytes32 => Post) public postRegistry;
     bytes32[] public posts; // bzz hashes of the posts
     mapping(uint => Comment[]) public comments;
-    
+
     modifier ownerOnly() {
         require(msg.sender == owner);
         _;
@@ -35,11 +35,11 @@ contract BlogManager {
     function BlogManager() {
         owner = msg.sender;
     }
-    
+
     // publish allows owner to publish a post to post registry
     // returns the id of the published post
-    function publish(bytes32 bzzHash, string title) ownerOnly() 
-        public returns (bool, uint) 
+    function publish(bytes32 bzzHash, string title) ownerOnly()
+        public returns (bool, uint)
     {
         // the post must be new
         require(postRegistry[bzzHash].timePublished == 0);
@@ -57,7 +57,7 @@ contract BlogManager {
         LogPostPublished(id);
         return (true, id);
     }
-    
+
     // update lets owner update an existing post
     function update(uint id, bytes32 bzzHash, string title) returns (bool) {
         require(posts[id] != 0);
@@ -73,7 +73,7 @@ contract BlogManager {
         delete postRegistry[bzzHash];
         return true;
     }
-    
+
     // unpublish removes a post from post registry
     // only zeros out the metadatas
     // obviously it cannot remove the post from Swarm
@@ -86,7 +86,7 @@ contract BlogManager {
         LogPostUnpublished(id);
         return true;
     }
-    
+
     // comment allows someone to comment on a post
     // payable, because they can optionally donate and support the blog owner
     function comment(uint id, string text) payable returns (bool) {
@@ -96,9 +96,10 @@ contract BlogManager {
             amount: msg.value,
             text: text
         }));
-        return (true);
+        LogCommented(id, comments[id].length - 1);
+        return true;
     }
-    
+
     // withdraw allows owner to withdraw donations from contract
     function withdraw() ownerOnly() returns (bool) {
         uint amount = this.balance;
@@ -106,20 +107,20 @@ contract BlogManager {
         LogWithdrawn(amount);
         return true;
     }
-    
+
     // kill shuts down the blog
     function kill() ownerOnly() returns (bool) {
         selfdestruct(owner);
         LogKilled();
         return true;
     }
-    
+
     // getPostCount returns the total number of posts created
     // note that it also counts unpublished posts
     function getPostCount() constant returns (uint) {
         return posts.length;
     }
-    
+
     // getCommentCount returns the total number of comments of a post
     function getCommentCount(uint id) constant returns (uint) {
         return comments[id].length;

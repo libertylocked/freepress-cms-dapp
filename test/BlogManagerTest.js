@@ -19,11 +19,11 @@ const POSTS = [{
 contract("BlogManager", (accounts) => {
   describe("constructor", () => {
     it("should have the correct owner set", () => {
-      return BlogManager.deployed()
-      .then((instance) => instance.owner())
-      .then((owner) => {
-        assert.equal(owner, accounts[0]);
-      })
+      return BlogManager.new()
+        .then((instance) => instance.owner())
+        .then((owner) => {
+          assert.equal(owner, accounts[0]);
+        })
     })
   });
 
@@ -32,44 +32,104 @@ contract("BlogManager", (accounts) => {
       let instance;
       let postID, blockPublished;
 
-      return BlogManager.deployed()
-      .then((_instance) => {
-        instance = _instance;
-        return instance.publish(POSTS[0].bzzHash, POSTS[0].title);
-      })
-      .then((txObject) => {
-        // get the post ID from log
-        assert.equal(txObject.logs[0].event, "LogPostPublished");
-        blockPublished = txObject.receipt.blockNumber;
-        postID = txObject.logs[0].args.id.toNumber();
-        return instance.posts(postID);
-      })
-      .then((postBzzHash) => {
-        // check if post is added to post arr
-        assert.equal(postBzzHash, POSTS[0].bzzHash);
-        return instance.postRegistry(postBzzHash);
-      })
-      .then((postMetadata) => {
-        // check if metadata is stored in post registry
-        assert.equal(postMetadata[0], POSTS[0].title);
-        assert.equal(postMetadata[1], postID);
-        assert.equal(postMetadata[2], POSTS[0].bzzHash);
-        assert.equal(postMetadata[3], blockPublished); // time published
-        assert.equal(postMetadata[4], blockPublished); // time updated
-      })
+      return BlogManager.new()
+        .then((_instance) => {
+          instance = _instance;
+          return instance.publish(POSTS[0].bzzHash, POSTS[0].title);
+        })
+        .then((txObject) => {
+          // get the post ID from log
+          assert.equal(txObject.logs[0].event, "LogPostPublished");
+          blockPublished = txObject.receipt.blockNumber;
+          postID = txObject.logs[0].args.id.toNumber();
+          return instance.posts(postID);
+        })
+        .then((postBzzHash) => {
+          // check if post is added to post arr
+          assert.equal(postBzzHash, POSTS[0].bzzHash);
+          return instance.postRegistry(postBzzHash);
+        })
+        .then((postMetadata) => {
+          // check if metadata is stored in post registry
+          assert.equal(postMetadata[0], POSTS[0].title);
+          assert.equal(postMetadata[1], postID);
+          assert.equal(postMetadata[2], POSTS[0].bzzHash);
+          assert.equal(postMetadata[3], blockPublished); // time published
+          assert.equal(postMetadata[4], blockPublished); // time updated
+        })
+    })
+
+    it("should reject publish request for a bzz hash that's already published", (done) => {
+      let instance;
+
+      BlogManager.new()
+        .then((_instance) => {
+          instance = _instance;
+          return instance.publish(POSTS[0].bzzHash, POSTS[0].title);
+        })
+        .then((txObject) => {
+          assert.equal(txObject.logs[0].event, "LogPostPublished");
+          return instance.publish(POSTS[0].bzzHash, POSTS[0].title);
+        })
+        .then((txObject) => {
+          done(new Error("Duplicate bzz hash published"));
+        })
+        .catch((err) => {
+          assertInvalidOpCode(err);
+          done();
+        })
     })
 
     it("should reject publish request from non-owners", (done) => {
-      BlogManager.deployed()
-      .then((instance) => instance.publish(POSTS[0].bzzHash, POSTS[0].title, { from: accounts[1] }))
-      .then((txObject) => {
-        done(new Error("Non-owner published a post"));
-      })
-      .catch((err) => {
-        assertInvalidOpCode(err);
-        done();
-      })
+      BlogManager.new()
+        .then((instance) => instance.publish(POSTS[0].bzzHash, POSTS[0].title, {
+          from: accounts[1]
+        }))
+        .then((txObject) => {
+          done(new Error("Non-owner published a post"));
+        })
+        .catch((err) => {
+          assertInvalidOpCode(err);
+          done();
+        })
     })
   });
+
+  describe("comment", () => {
+    let instance;
+
+    beforeEach(() => {
+      return BlogManager.new()
+        .then((_instance) => {
+          instance = _instance;
+          return instance.publish(POSTS[0].bzzHash, POSTS[0].title);
+        })
+        .then((txObject) => {
+          assert.equal(txObject.logs[0].event, "LogPostPublished");
+          return instance.publish(POSTS[1].bzzHash, POSTS[1].title);
+        })
+        .then((txObject) => {
+          assert.equal(txObject.logs[0].event, "LogPostPublished");
+        });
+    });
+
+    it("should save the comment upon calling comment", () => {
+      return instance.comment(0, "hello", {
+          from: accounts[1],
+          value: web3.toWei(1, "ether"),
+        })
+        .then((txObject) => {
+          assert.equal(txObject.logs[0].event, "LogCommented");
+          assert.equal(txObject.logs[0].args.id.toString(), "0");
+          assert.equal(txObject.logs[0].args.commentIndex.toString(), "0");
+          return instance.comments(0, 0);
+        })
+        .then((comment) => {
+          assert.equal(comment[0], accounts[1]);
+          assert.equal(comment[1].toString(), web3.toWei(1, "ether"));
+          assert.equal(comment[2], "hello");
+        });
+    })
+  })
 
 });
