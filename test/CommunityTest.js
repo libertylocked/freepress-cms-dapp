@@ -76,7 +76,34 @@ contract("Community", (accounts) => {
           assertInvalidOpCode(err);
           done();
         })
+    });
+
+    it("should fail if author already has a blog", (done) => {
+      let instance;
+
+      Community.new(FEE)
+        .then((_instance) => {
+          instance = _instance;
+          return instance.createBlog({
+            from: accounts[1],
+            value: FEE,
+          });
+        })
+        .then((txObj) => {
+          // assert create success
+          assert.equal(txObj.logs[0].event, "LogBlogCreated");
+          return instance.createBlog({
+            from: accounts[1],
+            value: FEE,
+          })
+        })
+        .then((txObj) => {
+          done(new Error("Create did not throw error when author already has a blog in the community"));
+        })
+        .catch((err) => {
+          assertInvalidOpCode(err);
+          done();
+        })
     })
   });
-
 });
