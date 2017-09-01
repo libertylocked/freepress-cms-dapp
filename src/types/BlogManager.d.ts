@@ -5,7 +5,7 @@ declare module BlogManager {
     owner: () => Promise<string>;
     postRegistry: (hash: string) => Promise<PostRaw>;
     posts: (id: BigNumber.BigNumber | number) => Promise<string>;
-    comments: (id: BigNumber.BigNumber | number) => Promise<CommentRaw[]>;
+    comments: (id: BigNumber.BigNumber | number, commentIndex: BigNumber.BigNumber | number) => Promise<CommentRaw>;
     getPostCount: () => Promise<BigNumber.BigNumber>;
     getCommentCount: (postID: BigNumber.BigNumber) => Promise<BigNumber.BigNumber>;
     publish: (bzzHash: string, title: string, opts?: any) => Promise<any>;

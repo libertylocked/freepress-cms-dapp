@@ -38,6 +38,7 @@ class PostDirectory extends React.Component<IProps, IState> {
               post={post}
               isOwner={this.props.isOwner}
               onDeleteClick={(id) => { this.deletePost(id, this.props.onDeleteSuccess, this.props.contractInstance); }}
+              contractInstance={this.props.contractInstance}
             />
             : null
         ))}
@@ -48,12 +49,14 @@ class PostDirectory extends React.Component<IProps, IState> {
   public updatePostsState = async () => {
     const postCount = await this.props.contractInstance.getPostCount();
     const posts = await this.getPosts(new BigNumber(0), postCount.minus(1), this.props.contractInstance);
+    // const postComments = await
     this.setState({ posts });
   }
 
   private getPosts = async (fromID: BigNumber.BigNumber,
                             toID: BigNumber.BigNumber,
                             instance: BlogManager.BlogManager): Promise<BlogManager.Post[]> => {
+    // XXX
     let postID = fromID;
     const postIDs = [];
     while (postID.lessThanOrEqualTo(toID)) {

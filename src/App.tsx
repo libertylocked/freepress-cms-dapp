@@ -85,7 +85,9 @@ class App extends React.Component<{}, IState> {
               isOwner={this.state.clientState.coinbase === this.state.contractState.owner}
               onSubmitSuccess={() => {
                 this.updateContractState(this.state.web3);
-                this.postDirectoryComponent!.updatePostsState();
+                if (this.postDirectoryComponent) {
+                  this.postDirectoryComponent.updatePostsState();
+                }
               }}
             />
             : <p>Loading</p>}
