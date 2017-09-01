@@ -1,12 +1,5 @@
 const BlogManager = artifacts.require("./BlogManager.sol");
-
-/**
- * Asserts that the error message is invalid opcode
- * @param {Error} err
- */
-const assertInvalidOpCode = (err) => {
-  assert.equal(err.message, "VM Exception while processing transaction: invalid opcode");
-}
+const assertInvalidOpCode = require("./helpers.js").assertInvalidOpCode;
 
 const POSTS = [{
   bzzHash: "0x4bfc3b3028fd33f2a4ef180935029f95fb867b3628acd782dc0e9fcc1a8bcc5b",

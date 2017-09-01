@@ -114,6 +114,16 @@ contract BlogManager {
         LogKilled();
         return true;
     }
+    
+    // changeOwner lets the owner give someone else control of the blog
+    function changeOwner(address newOwner) ownerOnly() returns (bool) {
+        owner = newOwner;
+        return true;
+    }
+
+    // ====================
+    //  constant functions
+    // ====================
 
     // getPostCount returns the total number of posts created
     // note that it also counts unpublished posts
