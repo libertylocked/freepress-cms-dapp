@@ -102,6 +102,7 @@ class App extends React.Component<{}, IState> {
         {this.state.clientState && this.state.contractState ?
           <PostDirectory
             ref={(c) => { this.postDirectoryComponent = c; }}
+            web3={this.state.web3}
             bzz={this.state.bzz}
             contractInstance={this.state.contractState.instance}
             isOwner={this.state.clientState.coinbase === this.state.contractState.owner}

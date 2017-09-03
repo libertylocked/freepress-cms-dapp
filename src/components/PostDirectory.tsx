@@ -5,6 +5,7 @@ import { IsPostValid, ParsePost } from "../utils/blogContractUtils";
 import PostDirectoryItem from "./PostDirectoryItem";
 
 interface IProps {
+  web3: any;
   bzz: any;
   contractInstance: BlogManager.BlogManager;
   isOwner: boolean;
@@ -36,6 +37,7 @@ class PostDirectory extends React.Component<IProps, IState> {
           IsPostValid(post) ?
             <PostDirectoryItem
               key={post.id.toString()}
+              web3={this.props.web3}
               bzz={this.props.bzz}
               post={post}
               isOwner={this.props.isOwner}

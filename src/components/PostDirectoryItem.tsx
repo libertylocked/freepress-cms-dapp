@@ -1,9 +1,10 @@
 import * as React from "react";
-import ShowComment from "./ShowComment";
+import ShowComments from "./ShowComments";
 import UploadComment from "./UploadComment";
 import ViewPost from "./ViewPost";
 
 interface IProps {
+  web3: any;
   bzz: any;
   post: BlogManager.Post;
   isOwner: boolean;
@@ -18,8 +19,8 @@ const PostDirectoryItem: React.StatelessComponent<IProps> = (props) => (
     <div>Published {props.post.timePublished.toString()} Updated {props.post.timeUpdated.toString()}</div>
     <button onClick={() => { props.onDeleteClick(props.post.id); }} hidden={!props.isOwner}>Delete</button>
     <ViewPost bzz={props.bzz} postHash={props.post.bzzHash} />
-    <ShowComment postID={props.post.id} contractInstance={props.contractInstance} />
-    <UploadComment postID={props.post.id} contractInstance={props.contractInstance} />
+    <ShowComments postID={props.post.id} contractInstance={props.contractInstance} />
+    <UploadComment web3={props.web3} postID={props.post.id} contractInstance={props.contractInstance} />
   </div>
 );
 
