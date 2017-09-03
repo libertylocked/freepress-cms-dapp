@@ -43,7 +43,10 @@ class AddPost extends React.Component<IProps, {}> {
     const bzzHash = this.bzzHashInput.value;
     const postTitle = this.postTitleInput.value;
     try {
-      const txObj: any = await this.props.contractInstance.publish(bzzHash, postTitle);
+      const accounts = await (this.props.web3.eth as any).getAccountsPromise();
+      const txObj: any = await this.props.contractInstance.publish(bzzHash, postTitle, {
+        from: accounts[0],
+      });
       console.log(txObj);
       const postID = txObj.logs[0].args.id.toString();
       alert("Your post has been published. ID is " + postID);
@@ -52,7 +55,7 @@ class AddPost extends React.Component<IProps, {}> {
       // invoke callback
       this.props.onSubmitSuccess(txObj);
     } catch (err) {
-      alert(err);
+      alert(err.message);
     }
   }
 }

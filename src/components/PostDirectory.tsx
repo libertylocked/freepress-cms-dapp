@@ -5,6 +5,7 @@ import { IsPostValid, ParsePost } from "../utils/blogContractUtils";
 import PostDirectoryItem from "./PostDirectoryItem";
 
 interface IProps {
+  bzz: any;
   contractInstance: BlogManager.BlogManager;
   isOwner: boolean;
   onDeleteSuccess: (txObj: any) => void;
@@ -35,6 +36,7 @@ class PostDirectory extends React.Component<IProps, IState> {
           IsPostValid(post) ?
             <PostDirectoryItem
               key={post.id.toString()}
+              bzz={this.props.bzz}
               post={post}
               isOwner={this.props.isOwner}
               onDeleteClick={(id) => { this.deletePost(id, this.props.onDeleteSuccess, this.props.contractInstance); }}

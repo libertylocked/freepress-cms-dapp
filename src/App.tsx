@@ -2,6 +2,7 @@ import * as BigNumber from "bignumber.js";
 import * as Bluebird from "bluebird";
 import * as React from "react";
 import * as Web3 from "web3";
+import getBzz from "./utils/getBzz";
 import getWeb3 from "./utils/getWeb3";
 const TruffleContract = require("truffle-contract");
 const BlogManagerJSON = require("../build/contracts/BlogManager.json");
@@ -14,6 +15,7 @@ const appStyles = require("./App.css");
 
 interface IState {
   web3: any; // not using Web3 as type because we promisified some functions
+  bzz: any;
   clientState: IClientState | undefined;
   contractState: IContractState | undefined;
 }
@@ -36,17 +38,21 @@ class App extends React.Component<{}, IState> {
     super();
     this.state = {
       web3: undefined,
+      bzz: undefined,
       clientState: undefined,
       contractState: undefined,
     };
   }
 
   public async componentWillMount() {
-    const web3 = await getWeb3;
+    // const web3 = await getWeb3;
+    // const bzz = await getBzz;
+    const [web3, bzz] = await Promise.all<Web3, any>([getWeb3, getBzz]);
     Bluebird.promisifyAll(web3.eth, { suffix: "Promise" });
     Bluebird.promisifyAll(web3.version, { suffix: "Promise" });
     // Bluebird.promisifyAll((web3 as any).bzz, { suffix: "Promise" });
     this.setState({ web3 });
+    this.setState({ bzz });
 
     const coinbase: string = await (web3 as any).eth.getCoinbasePromise();
     const network: string = await (web3 as any).version.getNetworkPromise();
@@ -96,6 +102,7 @@ class App extends React.Component<{}, IState> {
         {this.state.clientState && this.state.contractState ?
           <PostDirectory
             ref={(c) => { this.postDirectoryComponent = c; }}
+            bzz={this.state.bzz}
             contractInstance={this.state.contractState.instance}
             isOwner={this.state.clientState.coinbase === this.state.contractState.owner}
             onDeleteSuccess={() => {
