@@ -7,7 +7,7 @@ Freepress CMS is a proof-of-concept decentralized CMS for personal blogging, pow
 > :warning: This is pre-production software with very minimal testing, and is certainly not audited. Use at your own risk.
 
 # Demo
-- [Client hosted on Github pages](http://180fov.com/blog-dapp-demo/)
+- [Client hosted on Github pages](https://libertylocked.github.io/blog-dapp-demo/)
 - The contract is only deployed on Ropsten testnet
 - You need Mist or Metamask
 
