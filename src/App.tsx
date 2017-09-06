@@ -131,7 +131,7 @@ class App extends React.Component<{}, IState> {
         },
       });
     } catch (err) {
-      alert(err);
+      alert(err.message);
       this.setState({
         contractState: undefined,
       });
