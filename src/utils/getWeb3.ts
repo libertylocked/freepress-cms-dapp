@@ -15,8 +15,8 @@ const getWeb3 = new Promise<Web3>((resolve, reject) => {
       const provider = new Web3.providers.HttpProvider("http://localhost:8545");
       web3 = new Web3(provider);
     }
-    resolve(web3);
     (window as any).web3 = web3;
+    resolve(web3);
   });
 });
 

@@ -15,7 +15,9 @@ interface IProps {
 const PostDirectoryItem: React.StatelessComponent<IProps> = (props) => (
   <div>
     <h3>{props.post.title}<sub> (ID: {props.post.id.toString()})</sub></h3>
-    <div>{props.post.bzzHash}</div>
+    <div>
+      bzz hash: <a href={`bzz://${props.post.bzzHash.slice(2)}`}>{props.post.bzzHash}</a>
+    </div>
     <div>Published {props.post.timePublished.toString()} Updated {props.post.timeUpdated.toString()}</div>
     <button onClick={() => { props.onDeleteClick(props.post.id); }} hidden={!props.isOwner}>Delete</button>
     <ViewPost bzz={props.bzz} postHash={props.post.bzzHash} />
